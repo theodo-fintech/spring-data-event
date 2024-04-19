@@ -3,10 +3,6 @@
 
 <div align="center">
   <h1 align="center">Spring Data Event</h1>
-
-  <p align="center">
-    
-  </p>
 </div>
 
 ### Features
@@ -20,7 +16,7 @@ More to come later... Stay tuned !
 
 ### Prerequisites
 
-This library has been currently tested on projects under SpringBoot on version 3.2.XX or later, using Hibernate as a JPA implementation.
+This library has been currently tested on projects under SpringBoot on version 3.2.4 with Java 17 or later, using Hibernate as a JPA implementation.
 
 
 ### Installation
@@ -31,20 +27,11 @@ You will have to add the dependency in your spring-boot-project
 <dependency>
     <groupId>com.sipios</groupId>
     <artifactId>spring-data-event</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
 </dependency>
 ```
 
 ### Configuration
-
-First, you have to import spring kafka in your project. Add the following dependency in your pom (if using maven)
-
-```xml
-<dependency>
-    <groupId>org.springframework.kafka</groupId>
-    <artifactId>spring-kafka</artifactId>
-</dependency>
-```
 
 Set up your application properties file to make spring kafka work properly
 
@@ -53,17 +40,7 @@ spring.kafka.bootstrap-servers=localhost:29092
 ```
 
 Then, you will have to enable the library so that it will be able to work properly.
-You can create a configuration class like that
-
-```java
-@Configuration
-@EnableDataEvent
-public class DataEventConfiguration {
-}
-```
-
-Or just adding the `@EnableDataEvent` on any of your `@Configuration` class.
-
+You just add the `@EnableDataEvent` on any of your `@Configuration` class already existing on your project, or directly on the `@SpringBootApplication` class.
 
 ## Usage
 
@@ -87,6 +64,12 @@ public class UserEntity {
 
 }
 ```
+
+By default, the topics on which the event will be sent are : 
+- For the creation : `entity_name.created` (for example : `userentity.created`)
+- For the update : `entity_name.updated` (for example : `userentity.updated`)
+- For the deletion : `entity_name.deleted` (for example : `userentity.deleted`)
+
 
 ## FAQs
 
