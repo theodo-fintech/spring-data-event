@@ -11,7 +11,7 @@
 
 	<groupId>com.sipios</groupId>
 	<artifactId>spring-data-event</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>com.sipios:spring-data-event</name>
 
 	<description>A Java library offering the @DataEventEntity annotation for publishing database entity changes to a Kafka queue, enabling straightforward event-driven architectures by automating event publication upon entity persistence.</description>
