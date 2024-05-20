@@ -11,6 +11,8 @@ import lombok.Setter;
 import org.hibernate.CallbackException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.kafka.core.KafkaTemplate;
 
 public class DataEventBroadcasterTest {
@@ -25,34 +27,46 @@ public class DataEventBroadcasterTest {
         broadcaster = new DataEventBroadcaster(kafkaTemplate, objectMapper);
     }
 
-    @Test
-    void testBroadcastEntityCreated() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "testEntity.created, testEntity.created",
+            "'', testentity.created"
+    })
+    void testBroadcastEntityCreated(String topicLabel, String expectedTopic) throws Exception {
         TestEntity entity = new TestEntity(1, "Test Name", true);
         String expectedJson = objectMapper.writeValueAsString(entity);
 
-        broadcaster.broadcastEntityCreated(entity, "testEntity.created");
+        broadcaster.broadcastEntityCreated(entity, topicLabel);
 
-        verify(kafkaTemplate).send(eq("testEntity.created"), eq(expectedJson));
+        verify(kafkaTemplate).send(eq(expectedTopic), eq(expectedJson));
     }
 
-    @Test
-    void testBroadcastEntityUpdated() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "testEntity.updated, testEntity.updated",
+            "'', testentity.updated"
+    })
+    void testBroadcastEntityUpdated(String topicLabel, String expectedTopic) throws Exception {
         TestEntity entity = new TestEntity(1, "Test Name", false);
         String expectedJson = objectMapper.writeValueAsString(entity);
 
-        broadcaster.broadcastEntityUpdated(entity, "testEntity.updated");
+        broadcaster.broadcastEntityUpdated(entity, topicLabel);
 
-        verify(kafkaTemplate).send(eq("testEntity.updated"), eq(expectedJson));
+        verify(kafkaTemplate).send(eq(expectedTopic), eq(expectedJson));
     }
 
-    @Test
-    void testBroadcastEntityDeleted() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "testEntity.deleted, testEntity.deleted",
+            "'', testentity.deleted"
+    })
+    void testBroadcastEntityDeleted(String topicLabel, String expectedTopic) throws Exception {
         TestEntity entity = new TestEntity(1, "Test Name", true);
         String expectedJson = objectMapper.writeValueAsString(entity);
 
-        broadcaster.broadcastEntityDeleted(entity, "testEntity.deleted");
+        broadcaster.broadcastEntityDeleted(entity, topicLabel);
 
-        verify(kafkaTemplate).send(eq("testEntity.deleted"), eq(expectedJson));
+        verify(kafkaTemplate).send(eq(expectedTopic), eq(expectedJson));
     }
 
     @Test
