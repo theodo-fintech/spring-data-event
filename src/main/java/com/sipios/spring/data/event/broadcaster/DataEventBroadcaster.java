@@ -1,5 +1,7 @@
 package com.sipios.spring.data.event.broadcaster;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.CallbackException;
@@ -14,7 +16,7 @@ public class DataEventBroadcaster {
 
     public DataEventBroadcaster(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
-        this.objectMapper = objectMapper;
+        this.objectMapper = configureObjectMapper(objectMapper);
     }
 
     private void broadcast(String topic, String message) {
@@ -49,5 +51,15 @@ public class DataEventBroadcaster {
         String topic = "".equals(topicLabel)?getTopic("deleted", entity): topicLabel;
         String message = getMessage(entity);
         broadcast(topic, message);
+    }
+
+    private ObjectMapper configureObjectMapper(ObjectMapper originalMapper) {
+        ObjectMapper mapper = originalMapper.copy();
+        mapper.addMixIn(Object.class, ObjectIdMixin.class);
+        return mapper;
+    }
+
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private static class ObjectIdMixin {
     }
 }

@@ -72,6 +72,7 @@ public class DataEventBroadcasterTest {
     @Test
     void testBroadcastEntityCreatedJsonProcessingException() throws Exception {
         objectMapper = mock(ObjectMapper.class);
+        when(objectMapper.copy()).thenReturn(objectMapper);
         broadcaster = new DataEventBroadcaster(kafkaTemplate, objectMapper);
         TestEntity entity = new TestEntity(1, "Test Name", true);
 
@@ -83,6 +84,7 @@ public class DataEventBroadcasterTest {
     @Test
     void testBroadcastEntityUpdatedJsonProcessingException() throws Exception {
         objectMapper = mock(ObjectMapper.class);
+        when(objectMapper.copy()).thenReturn(objectMapper);
         broadcaster = new DataEventBroadcaster(kafkaTemplate, objectMapper);
         TestEntity entity = new TestEntity(1, "Test Name", false);
 
@@ -94,6 +96,7 @@ public class DataEventBroadcasterTest {
     @Test
     void testBroadcastEntityDeletedJsonProcessingException() throws Exception {
         objectMapper = mock(ObjectMapper.class);
+        when(objectMapper.copy()).thenReturn(objectMapper);
         broadcaster = new DataEventBroadcaster(kafkaTemplate, objectMapper);
         TestEntity entity = new TestEntity(1, "Test Name", true);
 
