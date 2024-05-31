@@ -11,7 +11,7 @@ import org.hibernate.persister.entity.EntityPersister;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
+public class DataEventListener implements PostCommitInsertEventListener, PostCommitUpdateEventListener, PostCommitDeleteEventListener {
 
     private final DataEventBroadcaster dataEventBroadcaster;
     private final EntityManagerFactory entityManagerFactory;
@@ -20,9 +20,9 @@ public class DataEventListener implements PostInsertEventListener, PostUpdateEve
     private void init() {
         SessionFactoryImpl sessionFactory = entityManagerFactory.unwrap(SessionFactoryImpl.class);
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
-        registry.getEventListenerGroup(EventType.POST_INSERT).appendListener(this);
-        registry.getEventListenerGroup(EventType.POST_UPDATE).appendListener(this);
-        registry.getEventListenerGroup(EventType.POST_DELETE).appendListener(this);
+        registry.getEventListenerGroup(EventType.POST_COMMIT_INSERT).appendListener(this);
+        registry.getEventListenerGroup(EventType.POST_COMMIT_UPDATE).appendListener(this);
+        registry.getEventListenerGroup(EventType.POST_COMMIT_DELETE).appendListener(this);
     }
 
     public DataEventListener(DataEventBroadcaster dataEventBroadcaster, EntityManagerFactory entityManagerFactory) {
@@ -57,5 +57,18 @@ public class DataEventListener implements PostInsertEventListener, PostUpdateEve
     @Override
     public boolean requiresPostCommitHandling(EntityPersister persister) {
         return true;
+    }
+
+    @Override
+    public void onPostInsertCommitFailed(PostInsertEvent event) {
+    }
+
+    @Override
+    public void onPostDeleteCommitFailed(PostDeleteEvent event) {
+
+    }
+
+    @Override
+    public void onPostUpdateCommitFailed(PostUpdateEvent event) {
     }
 }
